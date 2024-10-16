@@ -1,0 +1,41 @@
+#define BLYNK_PRINT Serial
+#define BLYNK_TEMPLATE_ID "TMPL3OtemXdv4"
+#define BLYNK_TEMPLATE_NAME "light"
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <Wire.h>
+
+char auth[] = "0DpHOLx9oD6wkMnSu8i5u34asou8G_d8";
+char ssid[] = "NITHESH";        
+char pass[] = "1234567890";    
+
+void setup() {
+  pinMode(D7, OUTPUT);
+  digitalWrite(D7, HIGH);
+  Serial.begin(115200);
+  delay(10);
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, pass);
+  int wifi_ctr = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    wifi_ctr++;
+    if (wifi_ctr > 10) {
+      // Try to reconnect WiFi after 5 seconds if not connected
+      Serial.println("WiFi connection failed. Reconnecting...");
+      WiFi.disconnect();
+      delay(5000);
+      WiFi.begin(ssid, pass);
+      wifi_ctr = 0;
+    }
+  }
+  Serial.println("WiFi connected");
+  Blynk.begin(auth, ssid, pass);
+}
+
+void loop() {
+  Blynk.run();
+}
